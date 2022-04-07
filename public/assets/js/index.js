@@ -165,6 +165,13 @@ const renderNoteList = async (notes) => {
     noteListItems.push(li);
   });
 
+  //  jsonNotes.forEach((note, index) => {
+  //      const li = createLi(note.title);
+  //      li.dataset.noteId = index;
+   
+  //      noteListItems.push(li);
+  //    });
+
   if (window.location.pathname === '/notes') {
     noteListItems.forEach((note) => noteList[0].append(note));
   }
