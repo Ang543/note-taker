@@ -2,7 +2,8 @@ const express=require("express")
 const path=require("path")
 const fs = require("fs")
 const app=express()
-const notes=require("./db/db.json")
+let notes=require("./db/db.json")
+const { v4: uuidv4 } = require('uuid');
 
 app.use(express.static("public"));
 app.use(express.json());
@@ -23,7 +24,13 @@ app.get("/notes",(req, res)=>{
 app.post("/api/notes", (req, res) => {
     console.log(notes);
 
-    notes.push(req.body);
+const newNote = {
+    id: uuidv4(),
+    title: req.body.title,
+    text: req.body.text
+}
+
+    notes.push(newNote);
 
     console.log(notes)
 
@@ -34,6 +41,16 @@ app.post("/api/notes", (req, res) => {
    
 })
 
-app.listen(3001, ()=>{
+app.delete("/api/notes/:id", (req, res) => {
+const updatedNote = notes.filter((note) => {
+    return (note.id != req.params.id)
+})
+notes = updatedNote
+fs.writeFile("./db/db.json", JSON.stringify(updatedNote), () => {
+    res.json(req.body)
+})
+})
+
+app.listen(3001, () => {
     console.log ("server is running")
 })
